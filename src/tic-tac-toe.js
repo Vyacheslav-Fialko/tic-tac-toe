@@ -1,96 +1,81 @@
 class TicTacToe {
-constructor() {
-        this.matrix = [
-            [null, null, null],
-            [null, null, null],
-            [null, null, null]
-        ];
-        this.currentPlayer = 'x';
-        this.lengthMatrix = this.matrix.join().length;
-    }
+  constructor() {
+    this.area = [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ];
+    this.currentPlayerSymbol = "x";
+    this.length = 9;
+  }
 
-    getCurrentPlayerSymbol() {
-        return this.currentPlayer;
-    }
+  getCurrentPlayerSymbol() {
+    return this.currentPlayerSymbol;
+  }
 
-    nextTurn(rowIndex, columnIndex) {
-        if (this.matrix[rowIndex][columnIndex] == null) {
-            if (this.currentPlayer == 'x') {
-                this.matrix[rowIndex][columnIndex] = 'x';
-                this.currentPlayer = 'o';
-            } else {
-                this.matrix[rowIndex][columnIndex] = 'o';
-                this.currentPlayer = 'x';
+  nextTurn(rowIndex, columnIndex) {
+    if (this.area[rowIndex][columnIndex] === null) {
+      this.area[rowIndex][columnIndex] = this.currentPlayerSymbol;
+      this.currentPlayerSymbol === "x"
+        ? (this.currentPlayerSymbol = "o")
+        : (this.currentPlayerSymbol = "x");
+    }
+  }
+
+  isFinished() {
+    return this.getWinner() || this.noMoreTurns() ? true : false;
+  }
+
+  getWinner() {
+    let win = null;
+    const currrentArr = this.area;
+    currrentArr.forEach((element, indx, arr) => {
+      const elemToStr = element.join("");
+      if (indx === 0) {
+        for (let i = 0; i < element.length; i++) {
+          const el = element[i];
+          if (el !== null) {
+            if (el === arr[1][i] && el === arr[2][i]) {
+              win = el;
             }
-        }
-        return 0;
-    }
-
-    isFinished() {
-        return (this.getWinner() != null || this.noMoreTurns()) ? true : false;
-    }
-
-    getWinner() {
-        let winX = 0;
-        let winO = 0;
-        let currentLength = this.matrix.length;
-
-        for (let i = 0; i < currentLength; i++, winX = 0, winO = 0) {
-            for (let j = 0; j < currentLength; j++) {
-                if (this.matrix[i][j] == 'x')
-                    winX++;
-                if (this.matrix[i][j] == 'o')
-                    winO++;
+            if (i === 0) {
+              if (el === arr[1][1] && el === arr[2][2]) {
+                win = el;
+              }
             }
-            if (winX == currentLength) return 'x';
-            if (winO == currentLength) return 'o';
-        }
-
-        for (let j = 0; j < currentLength; j++, winX = 0, winO = 0) {
-            for (let i = 0; i < currentLength; i++) {
-                if (this.matrix[i][j] == 'x')
-                    winX++;
-                if (this.matrix[i][j] == 'o')
-                    winO++;
+            if (i === 2) {
+              if (el === arr[1][1] && el === arr[2][0]) {
+                win = el;
+              }
             }
-            if (winX == currentLength) return 'x';
-            if (winO == currentLength) return 'o';
+          }
         }
+      }
+      if (elemToStr === "xxx" || elemToStr === "ooo") {
+        win = element[0];
+      }
+    });
+    return win;
+  }
 
-        winX = 0, winO = 0;
-        for (let i = 0, j = 0; i < currentLength; i++, j++) {
-            if (this.matrix[i][j] == 'x')
-                winX++;
-            if (this.matrix[i][j] == 'o')
-                winO++;
-        }
-        if (winX == currentLength) return 'x';
-        if (winO == currentLength) return 'o';
+  noMoreTurns() {
+    let count = 0;
+    this.area
+      .join()
+      .split(",")
+      .forEach((item) => {
+        item === "x" || item === "o" ? (count += 1) : count;
+      });
+    return count === this.length;
+  }
 
-        winX = 0, winO = 0;
-        for (let i = 2, j = 0; j < currentLength; i--, j++) {
-            if (this.matrix[i][j] == 'x')
-                winX++;
-            if (this.matrix[i][j] == 'o')
-                winO++;
-        }
-        if (winX == currentLength) return 'x';
-        if (winO == currentLength) return 'o';
+  isDraw() {
+    return this.noMoreTurns() && this.getWinner() == null;
+  }
 
-        return null;
-    }
-
-    noMoreTurns() {
-        return this.matrix.join().length == this.lengthMatrix * 2 + 1;
-    }
-
-    isDraw() {
-        return this.noMoreTurns() && this.getWinner() == null;
-    }
-
-    getFieldValue(rowIndex, colIndex) {
-        return this.matrix[rowIndex][colIndex];
-    }
+  getFieldValue(rowIndex, colIndex) {
+    return this.area[rowIndex][colIndex];
+  }
 }
 
 module.exports = TicTacToe;
